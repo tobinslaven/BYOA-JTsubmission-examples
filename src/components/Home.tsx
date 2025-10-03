@@ -75,9 +75,6 @@ const Home: React.FC<HomeProps> = ({
         <div className="max-w-2xl mx-auto space-y-6">
           <form onSubmit={handleSubmit} className="space-y-4">
             <div>
-              <label htmlFor="prompt" className="block text-sm font-medium text-gray-700 mb-2">
-                Project Directions & Requirements
-              </label>
               <textarea
                 id="prompt"
                 value={promptText}
@@ -86,11 +83,10 @@ const Home: React.FC<HomeProps> = ({
                 placeholder="Paste your project prompt here..."
                 className="w-full h-32 px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-primary-500 focus:border-primary-500"
                 disabled={appState.isLoading}
-                aria-describedby="prompt-help"
               />
-              <p id="prompt-help" className="text-xs text-gray-500 mt-1">
-                {promptText.length} characters. Press Ctrl+Enter (or Cmd+Enter on Mac) to submit.
-              </p>
+              <label htmlFor="prompt" className="block text-sm font-medium text-gray-700 mt-2">
+                Project Directions & Requirements
+              </label>
             </div>
 
             <StudioToggle
