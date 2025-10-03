@@ -1,15 +1,15 @@
 {
   "files": {
     "main.css": "/BYOA-JTsubmission-examples/static/css/main.def5fd71.css",
-    "main.js": "/BYOA-JTsubmission-examples/static/js/main.8476b2b2.js",
+    "main.js": "/BYOA-JTsubmission-examples/static/js/main.770ae98a.js",
     "static/js/453.6d0fef29.chunk.js": "/BYOA-JTsubmission-examples/static/js/453.6d0fef29.chunk.js",
     "index.html": "/BYOA-JTsubmission-examples/index.html",
     "main.def5fd71.css.map": "/BYOA-JTsubmission-examples/static/css/main.def5fd71.css.map",
-    "main.8476b2b2.js.map": "/BYOA-JTsubmission-examples/static/js/main.8476b2b2.js.map",
+    "main.770ae98a.js.map": "/BYOA-JTsubmission-examples/static/js/main.770ae98a.js.map",
     "453.6d0fef29.chunk.js.map": "/BYOA-JTsubmission-examples/static/js/453.6d0fef29.chunk.js.map"
   },
   "entrypoints": [
     "static/css/main.def5fd71.css",
-    "static/js/main.8476b2b2.js"
+    "static/js/main.770ae98a.js"
   ]
 }

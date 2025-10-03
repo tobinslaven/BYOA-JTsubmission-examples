@@ -192,7 +192,7 @@ Respond in this exact JSON format:
 // Mock data generators as fallback
 function generateMockWorldClass(studio: Studio, promptText: string): string {
   const baseResponses = {
-    ES: `I successfully completed my project about ${promptText.length > 50 ? promptText.substring(0, 50) + '...' : promptText}
+    ES: `I successfully completed my project about ${promptText.length > 80 ? promptText.substring(0, 80) + '...' : promptText}
 
 My goal was to understand the main concepts and demonstrate my learning clearly. I achieved this by following a structured approach and documenting my process.
 
@@ -200,7 +200,7 @@ I used two reliable sources: my textbook chapter on this topic and an educationa
 
 I have attached photos of my work showing my step-by-step process, including my notes, sketches, and final project. I also included a summary document explaining what I learned.`,
     
-    MS: `This project focused on ${promptText.length > 50 ? promptText.substring(0, 50) + '...' : promptText} and required comprehensive research and analysis.
+    MS: `This project focused on ${promptText.length > 80 ? promptText.substring(0, 80) + '...' : promptText} and required comprehensive research and analysis.
 
 My objective was to investigate the topic thoroughly and present my findings in a clear, organized manner. Through this project, I gained valuable insights into the subject matter.
 
@@ -214,7 +214,7 @@ Key Findings:
 
 Reflection: This project challenged me to think critically about the topic and develop my research skills. I learned the importance of verifying sources and presenting balanced perspectives.`,
     
-    LP: `This comprehensive analysis examines ${promptText.length > 50 ? promptText.substring(0, 50) + '...' : promptText} through a rigorous academic approach that demonstrates advanced critical thinking and research methodology.
+    LP: `This comprehensive analysis examines ${promptText.length > 80 ? promptText.substring(0, 80) + '...' : promptText} through a rigorous academic approach that demonstrates advanced critical thinking and research methodology.
 
 Research Objective: To conduct an in-depth investigation that contributes meaningful insights to the field of study while demonstrating mastery of advanced research techniques and analytical frameworks.
 
@@ -232,19 +232,19 @@ Critical Reflection: This research project has significantly advanced my underst
 
 function generateMockNotApproved(studio: Studio, promptText: string): string {
   const baseResponses = {
-    ES: `I did my project about ${promptText.length > 30 ? promptText.substring(0, 30) + '...' : promptText}
+    ES: `I did my project about ${promptText.length > 80 ? promptText.substring(0, 80) + '...' : promptText}
 
 It was okay. I learned some stuff. My teacher helped me understand it better. I found some information online and in my book.
 
 I think I did good work on this project.`,
     
-    MS: `For this project I researched ${promptText.length > 30 ? promptText.substring(0, 30) + '...' : promptText}
+    MS: `For this project I researched ${promptText.length > 80 ? promptText.substring(0, 80) + '...' : promptText}
 
 It was an interesting topic. I found some information about it and learned new things. I think the project went well overall.
 
 I learned a lot from doing this research.`,
     
-    LP: `This project was about ${promptText.length > 30 ? promptText.substring(0, 30) + '...' : promptText}
+    LP: `This project was about ${promptText.length > 80 ? promptText.substring(0, 80) + '...' : promptText}
 
 I researched the topic and found some relevant information. The project helped me learn more about the subject matter.
 
