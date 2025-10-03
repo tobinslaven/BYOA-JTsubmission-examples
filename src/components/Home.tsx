@@ -80,13 +80,10 @@ const Home: React.FC<HomeProps> = ({
                 value={promptText}
                 onChange={(e) => setPromptText(e.target.value)}
                 onKeyDown={handleKeyDown}
-                placeholder="Paste your project prompt here..."
+                placeholder="Paste your project directions & requirements here"
                 className="w-full h-32 px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-primary-500 focus:border-primary-500"
                 disabled={appState.isLoading}
               />
-              <label htmlFor="prompt" className="block text-sm font-medium text-gray-700 mt-2">
-                Project Directions & Requirements
-              </label>
             </div>
 
             <StudioToggle
