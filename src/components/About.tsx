@@ -5,20 +5,19 @@ const About: React.FC = () => {
     <div className="max-w-4xl mx-auto">
       <div className="bg-white rounded-lg shadow-sm border border-gray-200 p-8">
         <h1 className="text-3xl font-bold text-gray-900 mb-6">
-          About BYOA JT Submission Examples
+          About The JT Submission Tool
         </h1>
 
         <div className="prose prose-gray max-w-none">
           <div className="space-y-6">
             <section>
               <h2 className="text-xl font-semibold text-gray-900 mb-3">
-                What is this tool?
+                Who created this tool?
               </h2>
               <p className="text-gray-700 leading-relaxed">
-                BYOA JT Submission Examples helps learners improve their JourneyTracker submissions 
-                by providing clear contrast examples. By seeing what makes work "World-Class" versus 
-                "Not Approved," learners can better understand expectations and self-correct before 
-                posting to JourneyTracker.
+                At Acton Academy Fort Lauderdale, our learners submit their work on JourneyTracker each day. The JT Submission Tool helps learners improve their work submissions 
+                by providing clear contrast between World-Class and Not Approved examples. By seeing what makes work "World-Class" versus 
+                "Not Approved" work, learners can better understand how to document excellent work before posting to JourneyTracker.
               </p>
             </section>
 
@@ -82,24 +81,13 @@ const About: React.FC = () => {
               <h2 className="text-xl font-semibold text-gray-900 mb-3">
                 Success Criteria
               </h2>
-              <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-                <div className="bg-green-50 border border-green-200 rounded-lg p-4">
-                  <h3 className="font-semibold text-green-900 mb-2">Target Outcomes</h3>
-                  <ul className="text-sm text-green-800 space-y-1">
-                    <li>• 40% reduction in rejected submissions</li>
-                    <li>• 30% increase in complete criteria coverage</li>
-                    <li>• 3+ reuses per week per studio</li>
-                  </ul>
-                </div>
-                <div className="bg-yellow-50 border border-yellow-200 rounded-lg p-4">
-                  <h3 className="font-semibold text-yellow-900 mb-2">Quality Tips</h3>
-                  <ul className="text-sm text-yellow-800 space-y-1">
-                    <li>• Use complete sentences</li>
-                    <li>• Cite at least 2 sources</li>
-                    <li>• Attach evidence (photos, links)</li>
-                    <li>• Include personal reflection</li>
-                  </ul>
-                </div>
+              <div className="bg-green-50 border border-green-200 rounded-lg p-4">
+                <h3 className="font-semibold text-green-900 mb-2">Target Outcomes</h3>
+                <ul className="text-sm text-green-800 space-y-1">
+                  <li>• 40% reduction in rejected submissions</li>
+                  <li>• 30% increase in complete criteria coverage</li>
+                  <li>• 3+ reuses per week per studio</li>
+                </ul>
               </div>
             </section>
 
