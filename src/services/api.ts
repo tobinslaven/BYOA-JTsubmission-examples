@@ -8,11 +8,15 @@ import {
   Studio
 } from '../types';
 
-// Initialize OpenAI client
-const openai = new OpenAI({
-  apiKey: process.env.REACT_APP_OPENAI_API_KEY,
-  dangerouslyAllowBrowser: true // Only for demo purposes - in production, use a backend
-});
+// Initialize OpenAI client (only if API key is available)
+let openai: OpenAI | null = null;
+
+if (process.env.REACT_APP_OPENAI_API_KEY) {
+  openai = new OpenAI({
+    apiKey: process.env.REACT_APP_OPENAI_API_KEY,
+    dangerouslyAllowBrowser: true // Only for demo purposes - in production, use a backend
+  });
+}
 
 // Studio-specific criteria
 const studioCriteria = {
@@ -51,12 +55,24 @@ export const generateExamples = async (request: GenerateExamplesRequest): Promis
     keyPrefix: process.env.REACT_APP_OPENAI_API_KEY?.substring(0, 10) || 'none'
   });
 
-  if (!process.env.REACT_APP_OPENAI_API_KEY || process.env.REACT_APP_OPENAI_API_KEY === 'your_api_key_here') {
-    console.error('API Key check failed:', {
+  if (!openai || !process.env.REACT_APP_OPENAI_API_KEY || process.env.REACT_APP_OPENAI_API_KEY === 'your_api_key_here') {
+    console.log('API Key not available, using mock data:', {
       hasKey: !!process.env.REACT_APP_OPENAI_API_KEY,
       keyValue: process.env.REACT_APP_OPENAI_API_KEY ? 'Present' : 'Missing'
     });
-    throw new Error('OpenAI API key not configured. Please add your API key to the .env file.');
+    
+    // Return mock data instead of throwing an error
+    return {
+      worldClass: {
+        text: generateMockWorldClass(studio, promptText),
+        criteriaCovered: studioCriteria[studio].slice(0, 3) // Use first 3 criteria
+      },
+      notApproved: {
+        text: generateMockNotApproved(studio, promptText),
+        criteriaMissing: studioCriteria[studio].slice(3, 5) // Use last 2 criteria
+      },
+      criteriaAll: studioCriteria[studio]
+    };
   }
 
   try {
