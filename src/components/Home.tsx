@@ -113,24 +113,61 @@ const Home: React.FC<HomeProps> = ({
         <div className="max-w-6xl mx-auto">
           {appState.isLoading && (
             <div className="max-w-2xl mx-auto">
-              <div className="bg-white border border-gray-200 rounded-xl p-12 text-center shadow-sm">
-                {/* Simple Elegant Animation */}
-                <div className="mb-8">
-                  <div className="w-12 h-12 mx-auto mb-4">
-                    <div className="w-full h-full border-4 border-primary-200 rounded-full">
+              <div className="bg-white border border-gray-200 rounded-xl p-8 text-center shadow-sm">
+                {/* AI Brain Animation */}
+                <div className="mb-6">
+                  <div className="w-16 h-16 mx-auto mb-4 relative">
+                    {/* Brain outline */}
+                    <div className="w-full h-full border-4 border-primary-200 rounded-full relative overflow-hidden">
                       <div className="w-full h-full border-4 border-primary-500 rounded-full animate-spin border-t-transparent"></div>
+                    </div>
+                    {/* Thinking dots */}
+                    <div className="absolute inset-0 flex items-center justify-center">
+                      <div className="flex space-x-1">
+                        <div className="w-1 h-1 bg-primary-500 rounded-full animate-bounce" style={{animationDelay: '0ms'}}></div>
+                        <div className="w-1 h-1 bg-primary-500 rounded-full animate-bounce" style={{animationDelay: '150ms'}}></div>
+                        <div className="w-1 h-1 bg-primary-500 rounded-full animate-bounce" style={{animationDelay: '300ms'}}></div>
+                      </div>
                     </div>
                   </div>
                 </div>
 
-                {/* Clean Message */}
-                <div>
-                  <h3 className="text-lg font-medium text-gray-900 mb-2">
-                    Generating Examples
+                {/* Dynamic AI Stages */}
+                <div className="space-y-3">
+                  <h3 className="text-lg font-medium text-gray-900 mb-4">
+                    🧠 AI Guide is Working...
                   </h3>
-                  <p className="text-gray-600">
-                    Creating world-class and not-approved examples for {appState.activeStudio} level
-                  </p>
+                  
+                  <div className="space-y-2 text-sm">
+                    <div className="flex items-center justify-center space-x-2 text-gray-600">
+                      <span className="w-2 h-2 bg-green-500 rounded-full animate-pulse"></span>
+                      <span>📚 Analyzing project directions...</span>
+                    </div>
+                    <div className="flex items-center justify-center space-x-2 text-gray-600">
+                      <span className="w-2 h-2 bg-blue-500 rounded-full animate-pulse" style={{animationDelay: '1s'}}></span>
+                      <span>🎯 Applying {appState.activeStudio} studio criteria...</span>
+                    </div>
+                    <div className="flex items-center justify-center space-x-2 text-gray-600">
+                      <span className="w-2 h-2 bg-purple-500 rounded-full animate-pulse" style={{animationDelay: '2s'}}></span>
+                      <span>✨ Channeling Acton Academy wisdom...</span>
+                    </div>
+                    <div className="flex items-center justify-center space-x-2 text-gray-600">
+                      <span className="w-2 h-2 bg-orange-500 rounded-full animate-pulse" style={{animationDelay: '3s'}}></span>
+                      <span>🏆 Crafting world-class example...</span>
+                    </div>
+                    <div className="flex items-center justify-center space-x-2 text-gray-600">
+                      <span className="w-2 h-2 bg-red-500 rounded-full animate-pulse" style={{animationDelay: '4s'}}></span>
+                      <span>🤔 Creating "not approved" version...</span>
+                    </div>
+                    <div className="flex items-center justify-center space-x-2 text-gray-600">
+                      <span className="w-2 h-2 bg-yellow-500 rounded-full animate-pulse" style={{animationDelay: '5s'}}></span>
+                      <span>🎭 Adding just the right amount of Acton flair...</span>
+                    </div>
+                  </div>
+                  
+                  <div className="mt-4 text-xs text-gray-500 italic">
+                    💡 Pro tip: The AI is probably overthinking this way more than necessary
+                  </div>
                 </div>
               </div>
             </div>
