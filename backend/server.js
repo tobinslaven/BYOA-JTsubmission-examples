@@ -9,9 +9,18 @@ dotenv.config();
 const app = express();
 const PORT = process.env.PORT || 3001;
 
+// Debug environment variables
+console.log('Environment check:', {
+  hasOpenAIKey: !!process.env.OPENAI_API_KEY,
+  hasOpenAIKeyAlt: !!process.env.OPENAI_KEY,
+  keyLength: (process.env.OPENAI_API_KEY || process.env.OPENAI_KEY || '').length,
+  frontendUrl: process.env.FRONTEND_URL,
+  nodeEnv: process.env.NODE_ENV
+});
+
 // Initialize OpenAI client
 const openai = new OpenAI({
-  apiKey: process.env.OPENAI_API_KEY,
+  apiKey: process.env.OPENAI_API_KEY || process.env.OPENAI_KEY,
 });
 
 // Middleware
