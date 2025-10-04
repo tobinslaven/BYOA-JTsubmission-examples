@@ -89,7 +89,25 @@ app.post('/api/generate-examples', async (req, res) => {
     console.log('Generating examples for:', { studio, promptText: promptText.substring(0, 50) + '...' });
 
     // Create comprehensive prompts for GPT-4
-    const systemPrompt = `You are a Guide at Acton Academy. Your job is to produce two contrasting JourneyTracker (JT) submissions from project directions: a WORLD-CLASS example and a NOT APPROVED example.
+    const systemPrompt = studio === 'ES' ? 
+      `Create two JourneyTracker examples for Elementary Studio (ES).
+
+CRITERIA: ${criteria.join('; ')}
+
+Return ONLY this JSON format:
+{
+  "worldClass": {
+    "text": "Goal\\nMy goal is...\\n\\nProcess\\nI...\\n\\nEvidence\\n[Photo: my work]\\n\\nReflection\\nI learned...\\n\\nPeer Feedback\\nA studio mate said...\\n\\nNext Step\\nI will...",
+    "criteriaCovered": ["criteria1", "criteria2", "criteria3"]
+  },
+  "notApproved": {
+    "text": "Goal\\nI did a project.\\n\\nProcess\\nI worked on it.\\n\\nEvidence\\n(Nothing attached)\\n\\nReflection\\nIt was good.",
+    "criteriaMissing": ["criteria4", "criteria5"]
+  }
+}
+
+Use \\n for line breaks. No other text.` :
+      `You are a Guide at Acton Academy. Your job is to produce two contrasting JourneyTracker (JT) submissions from project directions: a WORLD-CLASS example and a NOT APPROVED example.
 
 ACTON ETHOS & TERMS (MUST FOLLOW)
 - Use: learners, guides, studio, badge, session, exhibition, tribe, audit committee, world-class, JourneyTracker (JT).
