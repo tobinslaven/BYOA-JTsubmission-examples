@@ -171,6 +171,7 @@ FORMATTING FOR ES:
 - Use simple words and short sentences
 - Use first-person "I..." statements
 - Keep it simple and clear
+- IMPORTANT: Use colons after section headers (Goal:, Process:, Evidence:, Reflection:, Peer Feedback:, Next Step:)
 
 CRITICAL: Return ONLY valid JSON. No markdown, no code blocks, no extra text.
 
@@ -202,6 +203,7 @@ Create TWO JourneyTracker submissions about these directions for the specified s
 FORMATTING
 - Write like real learner work with natural paragraph breaks and headings.
 - Use \\n for line breaks. Keep readability aligned to the studio.
+- IMPORTANT: Use colons after section headers (Goal:, Process:, Evidence:, Reflection:, Peer Feedback:, Next Step:)
 
 CRITICAL: Return ONLY valid JSON. No markdown, no code blocks, no extra text.
 
