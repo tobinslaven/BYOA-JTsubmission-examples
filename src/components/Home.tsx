@@ -1,8 +1,32 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { AppState, Studio, Comparison } from '../types';
 import StudioToggle from './StudioToggle';
 import ExampleCard from './ExampleCard';
 import SaveModal from './SaveModal';
+
+// AI Loading Stage Component
+const AILoadingStage: React.FC = () => {
+  const [currentStage, setCurrentStage] = useState(0);
+  
+  const stages = [
+    "Analyzing project directions...",
+    "Applying studio criteria...",
+    "Channeling Acton Academy wisdom...",
+    "Crafting world-class example...",
+    "Creating not-approved version...",
+    "Adding just the right amount of Acton flair..."
+  ];
+
+  useEffect(() => {
+    const interval = setInterval(() => {
+      setCurrentStage(prev => (prev + 1) % stages.length);
+    }, 2000); // Change every 2 seconds
+
+    return () => clearInterval(interval);
+  }, [stages.length]);
+
+  return <span>{stages[currentStage]}</span>;
+};
 
 interface HomeProps {
   appState: AppState;
@@ -133,40 +157,22 @@ const Home: React.FC<HomeProps> = ({
                 </div>
 
                 {/* Dynamic AI Stages */}
-                <div className="space-y-3">
+                <div className="space-y-4">
                   <h3 className="text-lg font-medium text-gray-900 mb-4">
-                    🧠 AI Guide is Working...
+                    AI Guide is Working...
                   </h3>
                   
-                  <div className="space-y-2 text-sm">
-                    <div className="flex items-center justify-center space-x-2 text-gray-600">
-                      <span className="w-2 h-2 bg-green-500 rounded-full animate-pulse"></span>
-                      <span>📚 Analyzing project directions...</span>
-                    </div>
-                    <div className="flex items-center justify-center space-x-2 text-gray-600">
-                      <span className="w-2 h-2 bg-blue-500 rounded-full animate-pulse" style={{animationDelay: '1s'}}></span>
-                      <span>🎯 Applying {appState.activeStudio} studio criteria...</span>
-                    </div>
-                    <div className="flex items-center justify-center space-x-2 text-gray-600">
-                      <span className="w-2 h-2 bg-purple-500 rounded-full animate-pulse" style={{animationDelay: '2s'}}></span>
-                      <span>✨ Channeling Acton Academy wisdom...</span>
-                    </div>
-                    <div className="flex items-center justify-center space-x-2 text-gray-600">
-                      <span className="w-2 h-2 bg-orange-500 rounded-full animate-pulse" style={{animationDelay: '3s'}}></span>
-                      <span>🏆 Crafting world-class example...</span>
-                    </div>
-                    <div className="flex items-center justify-center space-x-2 text-gray-600">
-                      <span className="w-2 h-2 bg-red-500 rounded-full animate-pulse" style={{animationDelay: '4s'}}></span>
-                      <span>🤔 Creating "not approved" version...</span>
-                    </div>
-                    <div className="flex items-center justify-center space-x-2 text-gray-600">
-                      <span className="w-2 h-2 bg-yellow-500 rounded-full animate-pulse" style={{animationDelay: '5s'}}></span>
-                      <span>🎭 Adding just the right amount of Acton flair...</span>
+                  <div className="h-16 flex items-center justify-center">
+                    <div className="text-center">
+                      <div className="w-3 h-3 bg-primary-500 rounded-full animate-pulse mx-auto mb-2"></div>
+                      <div className="text-sm text-gray-600 animate-fade-in">
+                        <AILoadingStage />
+                      </div>
                     </div>
                   </div>
                   
                   <div className="mt-4 text-xs text-gray-500 italic">
-                    💡 Pro tip: The AI is probably overthinking this way more than necessary
+                    The AI is probably overthinking this way more than necessary
                   </div>
                 </div>
               </div>

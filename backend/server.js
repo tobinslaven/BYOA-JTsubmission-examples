@@ -176,9 +176,15 @@ Rules:
     // Parse the JSON response
     let parsedResponse;
     try {
-      parsedResponse = JSON.parse(responseText);
+      // Clean up the response text - sometimes OpenAI includes extra text
+      const cleanResponse = responseText.trim();
+      const jsonMatch = cleanResponse.match(/\{[\s\S]*\}/);
+      const jsonString = jsonMatch ? jsonMatch[0] : cleanResponse;
+      
+      parsedResponse = JSON.parse(jsonString);
     } catch (parseError) {
       console.error('Failed to parse OpenAI response:', responseText);
+      console.error('Parse error:', parseError.message);
       throw new Error('Invalid response format from AI');
     }
 
