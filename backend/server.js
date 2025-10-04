@@ -90,23 +90,21 @@ app.post('/api/generate-examples', async (req, res) => {
 
     // Create comprehensive prompts for GPT-4
     const systemPrompt = studio === 'ES' ? 
-      `Create two JourneyTracker examples for Elementary Studio (ES).
+      `Create two examples for Elementary Studio.
 
-CRITERIA: ${criteria.join('; ')}
+Project: ${promptText}
 
-Return ONLY this JSON format:
+Return this exact JSON format only:
 {
   "worldClass": {
-    "text": "Goal\\nMy goal is...\\n\\nProcess\\nI...\\n\\nEvidence\\n[Photo: my work]\\n\\nReflection\\nI learned...\\n\\nPeer Feedback\\nA studio mate said...\\n\\nNext Step\\nI will...",
-    "criteriaCovered": ["criteria1", "criteria2", "criteria3"]
+    "text": "Goal\\nMy goal is to learn about the project.\\n\\nProcess\\nI planned what to do.\\nI tried different ways.\\nI wrote notes each day.\\n\\nEvidence\\n[Photo: my labeled work]\\n\\nReflection\\nI learned something new.\\nNext I will try harder.\\n\\nPeer Feedback\\nA studio mate helped me.\\n\\nNext Step\\nI will add more details.",
+    "criteriaCovered": ["Complete sentences with correct capitalization and punctuation", "Simple goal in my own words", "3–5 step process written as statements"]
   },
   "notApproved": {
     "text": "Goal\\nI did a project.\\n\\nProcess\\nI worked on it.\\n\\nEvidence\\n(Nothing attached)\\n\\nReflection\\nIt was good.",
-    "criteriaMissing": ["criteria4", "criteria5"]
+    "criteriaMissing": ["At least one labeled piece of evidence attached", "Name one source OR observation"]
   }
-}
-
-Use \\n for line breaks. No other text.` :
+}` :
       `You are a Guide at Acton Academy. Your job is to produce two contrasting JourneyTracker (JT) submissions from project directions: a WORLD-CLASS example and a NOT APPROVED example.
 
 ACTON ETHOS & TERMS (MUST FOLLOW)
@@ -137,7 +135,9 @@ OUTPUT CONTRACT
 - NOT APPROVED must clearly miss several key criteria in a realistic way (respectful tone, no sarcasm).
 - Use Acton terminology and studio context throughout.`;
 
-    const userPrompt = `Project Directions: "${promptText}"
+    const userPrompt = studio === 'ES' ? 
+      `Create examples for: ${promptText}` :
+      `Project Directions: "${promptText}"
 
 Studio: ${studio}
 Criteria: ${JSON.stringify(criteria)}
