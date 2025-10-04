@@ -178,12 +178,16 @@ Rules:
     try {
       // Clean up the response text - sometimes OpenAI includes extra text
       const cleanResponse = responseText.trim();
+      console.log('Raw OpenAI response for', studio, ':', cleanResponse.substring(0, 200) + '...');
+      
       const jsonMatch = cleanResponse.match(/\{[\s\S]*\}/);
       const jsonString = jsonMatch ? jsonMatch[0] : cleanResponse;
       
+      console.log('Extracted JSON for', studio, ':', jsonString.substring(0, 100) + '...');
+      
       parsedResponse = JSON.parse(jsonString);
     } catch (parseError) {
-      console.error('Failed to parse OpenAI response:', responseText);
+      console.error('Failed to parse OpenAI response for', studio, ':', responseText);
       console.error('Parse error:', parseError.message);
       throw new Error('Invalid response format from AI');
     }
