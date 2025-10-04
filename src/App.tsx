@@ -54,7 +54,9 @@ function App() {
         worldClass: response.worldClass,
         notApproved: response.notApproved,
         createdAt: new Date().toISOString(),
-        createdByRole: 'Learner'
+        createdByRole: 'Learner',
+        isMockData: response.isMockData,
+        apiError: response.apiError
       };
 
       setAppState(prev => ({ 

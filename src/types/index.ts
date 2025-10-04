@@ -16,6 +16,8 @@ export interface Comparison {
   notApproved: Example;
   createdAt: string;
   createdByRole: UserRole;
+  isMockData?: boolean;
+  apiError?: string;
 }
 
 export interface GenerateExamplesRequest {
@@ -27,6 +29,8 @@ export interface GenerateExamplesResponse {
   worldClass: Example;
   notApproved: Example;
   criteriaAll: string[];
+  isMockData?: boolean;
+  apiError?: string;
 }
 
 export interface SaveComparisonRequest {

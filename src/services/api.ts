@@ -75,7 +75,9 @@ export const generateExamples = async (request: GenerateExamplesRequest): Promis
         text: generateMockNotApproved(studio, promptText),
         criteriaMissing: studioCriteria[studio].slice(3, 5) // Use last 2 criteria
       },
-      criteriaAll: studioCriteria[studio]
+      criteriaAll: studioCriteria[studio],
+      isMockData: true,
+      apiError: 'API key not available or disabled'
     };
   }
 
@@ -202,17 +204,18 @@ Rules:
     parsedResponse.worldClass.text = cleanupTerminology(parsedResponse.worldClass.text);
     parsedResponse.notApproved.text = cleanupTerminology(parsedResponse.notApproved.text);
 
-    return {
-      worldClass: {
-        text: parsedResponse.worldClass.text,
-        criteriaCovered: parsedResponse.worldClass.criteriaCovered || criteria
-      },
-      notApproved: {
-        text: parsedResponse.notApproved.text,
-        criteriaMissing: parsedResponse.notApproved.criteriaMissing || criteria.slice(0, 3)
-      },
-      criteriaAll: criteria
-    };
+           return {
+             worldClass: {
+               text: parsedResponse.worldClass.text,
+               criteriaCovered: parsedResponse.worldClass.criteriaCovered || criteria
+             },
+             notApproved: {
+               text: parsedResponse.notApproved.text,
+               criteriaMissing: parsedResponse.notApproved.criteriaMissing || criteria.slice(0, 3)
+             },
+             criteriaAll: criteria,
+             isMockData: false
+           };
 
   } catch (error) {
     console.error('Error calling GPT-4 API:', error);
@@ -237,7 +240,9 @@ Rules:
         text: mockNotApproved,
         criteriaMissing: mockCriteria.slice(0, 3)
       },
-      criteriaAll: mockCriteria
+      criteriaAll: mockCriteria,
+      isMockData: true,
+      apiError: error instanceof Error ? error.message : 'API call failed'
     };
   }
 };
