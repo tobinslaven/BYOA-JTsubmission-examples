@@ -1,4 +1,3 @@
-import OpenAI from 'openai';
 import { 
   GenerateExamplesRequest, 
   GenerateExamplesResponse, 
@@ -8,15 +7,8 @@ import {
   Studio
 } from '../types';
 
-// Initialize OpenAI client (only if API key is available)
-let openai: OpenAI | null = null;
-
-if (process.env.REACT_APP_OPENAI_API_KEY) {
-  openai = new OpenAI({
-    apiKey: process.env.REACT_APP_OPENAI_API_KEY,
-    dangerouslyAllowBrowser: true // Only for demo purposes - in production, use a backend
-  });
-}
+// Backend API configuration
+const BACKEND_URL = process.env.REACT_APP_BACKEND_URL || 'http://localhost:3001';
 
 // Studio-specific criteria (Acton-aligned)
 const studioCriteria: Record<Studio, string[]> = {
@@ -53,196 +45,46 @@ const studioCriteria: Record<Studio, string[]> = {
 export const generateExamples = async (request: GenerateExamplesRequest): Promise<GenerateExamplesResponse> => {
   const { studio, promptText } = request;
   
-  console.log('Environment check:', {
-    hasKey: !!process.env.REACT_APP_OPENAI_API_KEY,
-    keyLength: process.env.REACT_APP_OPENAI_API_KEY?.length || 0,
-    keyPrefix: process.env.REACT_APP_OPENAI_API_KEY?.substring(0, 10) || 'none'
+  console.log('Calling backend API:', {
+    backendUrl: BACKEND_URL,
+    studio,
+    promptText: promptText.substring(0, 50) + '...'
   });
 
-  if (!openai || !process.env.REACT_APP_OPENAI_API_KEY || process.env.REACT_APP_OPENAI_API_KEY === 'your_api_key_here') {
-    console.log('API Key not available, using mock data:', {
-      hasKey: !!process.env.REACT_APP_OPENAI_API_KEY,
-      keyValue: process.env.REACT_APP_OPENAI_API_KEY ? 'Present' : 'Missing'
-    });
-    
-    // Return mock data instead of throwing an error
-    return {
-      worldClass: {
-        text: generateMockWorldClass(studio, promptText),
-        criteriaCovered: studioCriteria[studio].slice(0, 3) // Use first 3 criteria
+  try {
+    const response = await fetch(`${BACKEND_URL}/api/generate-examples`, {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
       },
-      notApproved: {
+      body: JSON.stringify({ studio, promptText })
+    });
+
+    if (!response.ok) {
+      throw new Error(`Backend API error: ${response.status} ${response.statusText}`);
+    }
+
+    const data = await response.json();
+    console.log('Backend API response:', { isMockData: data.isMockData, apiError: data.apiError });
+    return data;
+
+  } catch (error) {
+    console.error('Error calling backend API:', error);
+    
+    // Fallback to mock data if backend is unavailable
+    console.log('Backend unavailable, using mock data');
+  return {
+    worldClass: {
+        text: generateMockWorldClass(studio, promptText),
+        criteriaCovered: studioCriteria[studio].slice(0, 3)
+    },
+    notApproved: {
         text: generateMockNotApproved(studio, promptText),
-        criteriaMissing: studioCriteria[studio].slice(3, 5) // Use last 2 criteria
+        criteriaMissing: studioCriteria[studio].slice(3, 5)
       },
       criteriaAll: studioCriteria[studio],
       isMockData: true,
-      apiError: 'API key not available or disabled'
-    };
-  }
-
-  try {
-    const criteria = studioCriteria[studio];
-    console.log('Making GPT-4 API call with:', {
-      studio,
-      promptText: promptText.substring(0, 50) + '...',
-      criteriaCount: criteria.length
-    });
-    
-    // Create comprehensive prompts for GPT-4
-    const systemPrompt = (studio: Studio, criteria: string[]) => `
-You are a Guide at Acton Academy. Your job is to produce two contrasting JourneyTracker (JT) submissions from project directions: a WORLD-CLASS example and a NOT APPROVED example.
-
-ACTON ETHOS & TERMS (MUST FOLLOW)
-- Use: learners, guides, studio, badge, session, exhibition, tribe, audit committee, world-class, JourneyTracker (JT).
-- Avoid: students, teacher(s), classroom, assignment(s), grade(s)/report card(s), homework. Use these only if quoted from the prompt.
-- Guides never judge quality or approve badges; peers do. Encourage peer review, not guide approval.
-
-EXCELLENCE ORIENTATION
-- Standards focus on doing hard things with freedom and responsibility.
-- For repeated attempts: flag improvement ("better than last time").
-- In upper studios, note world-class comparison and public exhibition/contest when appropriate.
-
-VOICE & READABILITY BY STUDIO
-- ES (7–11): Grade 2–4 readability; short sentences (≤12 words); 2–4 sentence paragraphs; first-person "I… because… I noticed… Next I will…".
-- MS (12–15): Grade 6–8 readability; short headings and bullets allowed; concrete evidence and simple citations.
-- LP (16–18): Professional, concise, plain English; clear claims → evidence → citation; analytical tone.
-
-STRUCTURE (use section labels in the text)
-Goal • Process • Evidence • Reflection • Peer Feedback • Next Step
-
-CRITERIA TO TARGET FOR ${studio}
-${criteria.map((c,i)=>`${i+1}. ${c}`).join('\n')}
-
-OUTPUT CONTRACT
-- Return STRICT JSON only (no prose, no markdown, no code fences).
-- Use natural paragraphing and \\n line breaks inside the JSON strings.
-- WORLD-CLASS must explicitly satisfy the listed criteria for ${studio}.
-- NOT APPROVED must clearly miss several key criteria in a realistic way (respectful tone, no sarcasm).
-- Use Acton terminology and studio context throughout.
-`;
-
-    const userPrompt = (studio: Studio, promptText: string, criteria: string[]) => `
-Project Directions: "${promptText}"
-
-Studio: ${studio}
-Criteria: ${JSON.stringify(criteria)}
-
-Create TWO JourneyTracker submissions about these directions for the specified studio:
-
-1) WORLD-CLASS EXAMPLE: Meets ALL criteria. Clear sections: Goal, Process, Evidence, Reflection, Peer Feedback, Next Step.
-2) NOT APPROVED EXAMPLE: Misses SEVERAL key criteria (e.g., no evidence, vague goal, no sources, no revision). Keep tone respectful and realistic.
-
-FORMATTING
-- Write like real learner work with natural paragraph breaks and headings.
-- Use \\n for line breaks. Keep readability aligned to the studio.
-
-RETURN EXACT JSON (no extra text):
-{
-  "worldClass": {
-    "text": "full JT text with line breaks",
-    "criteriaCovered": ["...only from Criteria list..."]
-  },
-  "notApproved": {
-    "text": "full JT text with line breaks",
-    "criteriaMissing": ["...only from Criteria list..."]
-  }
-}
-
-Rules:
-- "criteriaCovered" and "criteriaMissing" must be subsets of the provided Criteria array for ${studio}.
-- Use Acton terms (learners, guides, studio, badge, session, exhibition, tribe, audit committee, world-class, JT).
-- Do not ask a guide to approve a badge; suggest peer feedback or audit processes if relevant.
-`;
-
-    // Calculate max tokens based on studio level
-    const maxTokensByStudio = {
-      ES: 450,
-      MS: 900, 
-      LP: 1400
-    };
-
-    const completion = await openai.chat.completions.create({
-      model: "gpt-4",
-      messages: [
-        { role: "system", content: systemPrompt(studio, criteria) },
-        { role: "user", content: userPrompt(studio, promptText, criteria) }
-      ],
-      temperature: 0.4,
-      max_tokens: maxTokensByStudio[studio]
-    });
-
-    const responseText = completion.choices[0]?.message?.content;
-    
-    if (!responseText) {
-      throw new Error('No response from OpenAI');
-    }
-
-    // Parse the JSON response
-    let parsedResponse;
-    try {
-      parsedResponse = JSON.parse(responseText);
-    } catch (parseError) {
-      console.error('Failed to parse OpenAI response:', responseText);
-      throw new Error('Invalid response format from AI');
-    }
-
-    // Validate the response structure
-    if (!parsedResponse.worldClass || !parsedResponse.notApproved) {
-      throw new Error('Invalid response structure from AI');
-    }
-
-    // Lightweight terminology cleanup
-    const cleanupTerminology = (text: string) => {
-      return text
-        .replace(/\bstudent(s)?\b/gi, 'learner$1')
-        .replace(/\bteacher(s)?\b/gi, 'guide$1')
-        .replace(/\bclassroom(s)?\b/gi, 'studio$1');
-    };
-
-    // Apply terminology cleanup to both examples
-    parsedResponse.worldClass.text = cleanupTerminology(parsedResponse.worldClass.text);
-    parsedResponse.notApproved.text = cleanupTerminology(parsedResponse.notApproved.text);
-
-           return {
-             worldClass: {
-               text: parsedResponse.worldClass.text,
-               criteriaCovered: parsedResponse.worldClass.criteriaCovered || criteria
-             },
-             notApproved: {
-               text: parsedResponse.notApproved.text,
-               criteriaMissing: parsedResponse.notApproved.criteriaMissing || criteria.slice(0, 3)
-             },
-             criteriaAll: criteria,
-             isMockData: false
-           };
-
-  } catch (error) {
-    console.error('Error calling GPT-4 API:', error);
-    console.error('Error details:', {
-      message: error instanceof Error ? error.message : 'Unknown error',
-      stack: error instanceof Error ? error.stack : undefined
-    });
-    
-    // Fallback to mock data if API fails
-    console.log('Falling back to mock data due to API error');
-    
-    const mockCriteria = studioCriteria[studio];
-    const mockWorldClass = generateMockWorldClass(studio, promptText);
-    const mockNotApproved = generateMockNotApproved(studio, promptText);
-  
-  return {
-    worldClass: {
-        text: mockWorldClass,
-        criteriaCovered: mockCriteria
-    },
-    notApproved: {
-        text: mockNotApproved,
-        criteriaMissing: mockCriteria.slice(0, 3)
-      },
-      criteriaAll: mockCriteria,
-      isMockData: true,
-      apiError: error instanceof Error ? error.message : 'API call failed'
+      apiError: `Backend unavailable: ${error instanceof Error ? error.message : 'Unknown error'}`
     };
   }
 };
