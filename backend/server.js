@@ -25,7 +25,11 @@ const openai = new OpenAI({
 
 // Middleware
 app.use(cors({
-  origin: process.env.FRONTEND_URL || 'http://localhost:3000',
+  origin: [
+    process.env.FRONTEND_URL || 'http://localhost:3000',
+    'https://tobinslaven.github.io',
+    'https://tobinslaven.github.io/BYOA-JTsubmission-examples'
+  ],
   credentials: true
 }));
 app.use(express.json());
