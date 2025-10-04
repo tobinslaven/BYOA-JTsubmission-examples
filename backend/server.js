@@ -133,15 +133,16 @@ FORMATTING
 - Write like real learner work with natural paragraph breaks and headings.
 - Use \\n for line breaks. Keep readability aligned to the studio.
 
-RETURN EXACT JSON (no extra text):
+CRITICAL: Return ONLY valid JSON. No markdown, no code blocks, no extra text.
+
 {
   "worldClass": {
     "text": "full JT text with line breaks",
-    "criteriaCovered": ["...only from Criteria list..."]
+    "criteriaCovered": ["criteria1", "criteria2", "criteria3"]
   },
   "notApproved": {
     "text": "full JT text with line breaks",
-    "criteriaMissing": ["...only from Criteria list..."]
+    "criteriaMissing": ["criteria4", "criteria5"]
   }
 }
 
@@ -195,21 +196,31 @@ Rules:
       
     } catch (parseError) {
       console.error('Failed to parse OpenAI response for', studio);
-      console.error('Response text:', responseText);
+      console.error('Response text length:', responseText.length);
+      console.error('Response text preview:', responseText.substring(0, 500));
       console.error('Parse error:', parseError.message);
       
-      // Try alternative parsing approaches
+      // Try multiple alternative parsing approaches
       try {
-        // Maybe it's wrapped in backticks or has extra text
-        const altMatch = responseText.match(/```(?:json)?\s*(\{[\s\S]*?\})\s*```/);
-        if (altMatch) {
+        // Try 1: Maybe it's wrapped in backticks
+        const altMatch1 = responseText.match(/```(?:json)?\s*(\{[\s\S]*?\})\s*```/);
+        if (altMatch1) {
           console.log('Trying alternative parsing with backticks...');
-          parsedResponse = JSON.parse(altMatch[1]);
-          console.log('Alternative parsing successful for', studio);
+          parsedResponse = JSON.parse(altMatch1[1]);
+          console.log('Alternative parsing with backticks successful for', studio);
         } else {
-          throw new Error('No valid JSON found');
+          // Try 2: Maybe it has extra text before/after JSON
+          const altMatch2 = responseText.match(/(\{[\s\S]*?\})/);
+          if (altMatch2) {
+            console.log('Trying alternative parsing with text extraction...');
+            parsedResponse = JSON.parse(altMatch2[1]);
+            console.log('Alternative parsing with text extraction successful for', studio);
+          } else {
+            throw new Error('No valid JSON found in any format');
+          }
         }
       } catch (altError) {
+        console.error('All parsing attempts failed for', studio);
         throw new Error('Invalid response format from AI');
       }
     }
