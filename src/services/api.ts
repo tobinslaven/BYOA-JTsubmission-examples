@@ -8,7 +8,7 @@ import {
 } from '../types';
 
 // Backend API configuration
-const BACKEND_URL = process.env.REACT_APP_BACKEND_URL || 'http://localhost:3001';
+const BACKEND_URL = process.env.REACT_APP_BACKEND_URL || 'https://byoa-jtsubmission-examples-production.up.railway.app';
 
 // Studio-specific criteria (Acton-aligned)
 const studioCriteria: Record<Studio, string[]> = {
