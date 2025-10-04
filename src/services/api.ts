@@ -81,6 +81,11 @@ export const generateExamples = async (request: GenerateExamplesRequest): Promis
 
   try {
     const criteria = studioCriteria[studio];
+    console.log('Making GPT-4 API call with:', {
+      studio,
+      promptText: promptText.substring(0, 50) + '...',
+      criteriaCount: criteria.length
+    });
     
     // Create comprehensive prompts for GPT-4
     const systemPrompt = (studio: Studio, criteria: string[]) => `
@@ -222,13 +227,13 @@ Rules:
     const mockCriteria = studioCriteria[studio];
     const mockWorldClass = generateMockWorldClass(studio, promptText);
     const mockNotApproved = generateMockNotApproved(studio, promptText);
-    
-    return {
-      worldClass: {
+  
+  return {
+    worldClass: {
         text: mockWorldClass,
         criteriaCovered: mockCriteria
-      },
-      notApproved: {
+    },
+    notApproved: {
         text: mockNotApproved,
         criteriaMissing: mockCriteria.slice(0, 3)
       },
