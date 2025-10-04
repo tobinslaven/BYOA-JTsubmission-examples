@@ -1,15 +1,16 @@
 import React from 'react';
 
 interface NavigationProps {
-  activeTab: 'home' | 'saved' | 'about';
-  onTabChange: (tab: 'home' | 'saved' | 'about') => void;
+  activeTab: 'home' | 'saved' | 'about' | 'test';
+  onTabChange: (tab: 'home' | 'saved' | 'about' | 'test') => void;
 }
 
 const Navigation: React.FC<NavigationProps> = ({ activeTab, onTabChange }) => {
   const tabs = [
     { id: 'home', label: 'Create Examples' },
     { id: 'saved', label: 'Saved Results' },
-    { id: 'about', label: 'About' }
+    { id: 'about', label: 'About' },
+    { id: 'test', label: 'Hover Test' }
   ] as const;
 
   return (

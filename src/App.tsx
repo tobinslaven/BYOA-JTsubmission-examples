@@ -6,6 +6,7 @@ import SavedResults from './components/SavedResults';
 import About from './components/About';
 import Navigation from './components/Navigation';
 import Toast from './components/Toast';
+import HoverTest from './components/HoverTest';
 
 function App() {
   const [appState, setAppState] = useState<AppState>({
@@ -17,7 +18,7 @@ function App() {
     currentPrompt: ''
   });
 
-  const [activeTab, setActiveTab] = useState<'home' | 'saved' | 'about'>('home');
+  const [activeTab, setActiveTab] = useState<'home' | 'saved' | 'about' | 'test'>('home');
   const [toast, setToast] = useState<{ message: string; type: 'success' | 'error' | 'info' } | null>(null);
 
   // Load saved comparisons on mount
@@ -191,6 +192,8 @@ function App() {
         )}
 
         {activeTab === 'about' && <About />}
+        
+        {activeTab === 'test' && <HoverTest />}
       </main>
 
       {toast && (

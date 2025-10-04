@@ -22,7 +22,7 @@ const ExampleCard: React.FC<ExampleCardProps> = ({
   const criteria = isWorldClass ? example.criteriaCovered : example.criteriaMissing;
 
   return (
-    <div className={`rounded-lg border-2 p-4 ${bgColor}`}>
+    <div className={`group rounded-lg border-2 p-4 ${bgColor}`}>
       <div className="flex items-center justify-between mb-3">
         <div className="flex items-center space-x-2">
           <div className={`w-8 h-8 rounded-full ${iconBg}`}>
@@ -40,7 +40,7 @@ const ExampleCard: React.FC<ExampleCardProps> = ({
         {onEdit && (
           <button
             onClick={onEdit}
-            className="p-2 text-gray-500 hover:text-gray-700 hover:bg-gray-100 rounded-md transition-colors"
+            className="opacity-0 group-hover:opacity-100 p-2 text-gray-500 hover:text-gray-700 hover:bg-gray-100 rounded-md transition-all duration-200"
             title="Edit example"
           >
             <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
