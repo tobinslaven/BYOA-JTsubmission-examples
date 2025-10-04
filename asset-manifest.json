@@ -1,0 +1,15 @@
+{
+  "files": {
+    "main.css": "/BYOA-JTsubmission-examples/static/css/main.29988156.css",
+    "main.js": "/BYOA-JTsubmission-examples/static/js/main.ae28c614.js",
+    "static/js/453.6d0fef29.chunk.js": "/BYOA-JTsubmission-examples/static/js/453.6d0fef29.chunk.js",
+    "index.html": "/BYOA-JTsubmission-examples/index.html",
+    "main.29988156.css.map": "/BYOA-JTsubmission-examples/static/css/main.29988156.css.map",
+    "main.ae28c614.js.map": "/BYOA-JTsubmission-examples/static/js/main.ae28c614.js.map",
+    "453.6d0fef29.chunk.js.map": "/BYOA-JTsubmission-examples/static/js/453.6d0fef29.chunk.js.map"
+  },
+  "entrypoints": [
+    "static/css/main.29988156.css",
+    "static/js/main.ae28c614.js"
+  ]
+}
