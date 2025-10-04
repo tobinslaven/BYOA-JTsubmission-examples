@@ -1,8 +1,9 @@
 import React, { useState, useEffect } from 'react';
-import { AppState, Studio, Comparison } from '../types';
+import { AppState, Studio, Comparison, Example } from '../types';
 import StudioToggle from './StudioToggle';
 import ExampleCard from './ExampleCard';
 import SaveModal from './SaveModal';
+import EditModal from './EditModal';
 
 // AI Loading Stage Component
 const AILoadingStage: React.FC = () => {
@@ -56,6 +57,7 @@ interface HomeProps {
   onStudioChange: (studio: Studio) => void;
   onClearResults: () => void;
   onShowToast: (message: string, type: 'success' | 'error' | 'info') => void;
+  onUpdateComparison: (updatedComparison: Comparison) => void;
 }
 
 const Home: React.FC<HomeProps> = ({
@@ -65,10 +67,13 @@ const Home: React.FC<HomeProps> = ({
   onLoadComparison,
   onStudioChange,
   onClearResults,
-  onShowToast
+  onShowToast,
+  onUpdateComparison
 }) => {
   const [promptText, setPromptText] = useState(appState.currentPrompt);
   const [showSaveModal, setShowSaveModal] = useState(false);
+  const [showEditModal, setShowEditModal] = useState(false);
+  const [editingExample, setEditingExample] = useState<{ example: Example; isWorldClass: boolean } | null>(null);
 
   const handleStudioSubmit = (studio: Studio) => {
     if (promptText.trim()) {
@@ -100,6 +105,30 @@ const Home: React.FC<HomeProps> = ({
   const handleNewChallenge = () => {
     onClearResults();
     setPromptText(''); // Clear the form text as well
+  };
+
+  const handleEditExample = (example: Example, isWorldClass: boolean) => {
+    setEditingExample({ example, isWorldClass });
+    setShowEditModal(true);
+  };
+
+  const handleSaveEdit = (updatedExample: Example) => {
+    if (!appState.currentComparison || !editingExample) return;
+
+    const updatedComparison: Comparison = {
+      ...appState.currentComparison,
+      [editingExample.isWorldClass ? 'worldClass' : 'notApproved']: updatedExample
+    };
+
+    onUpdateComparison(updatedComparison);
+    setShowEditModal(false);
+    setEditingExample(null);
+    onShowToast('Example updated successfully!', 'success');
+  };
+
+  const handleCloseEdit = () => {
+    setShowEditModal(false);
+    setEditingExample(null);
   };
 
 
@@ -250,12 +279,14 @@ const Home: React.FC<HomeProps> = ({
                   example={appState.currentComparison.worldClass}
                   isWorldClass={true}
                   studio={appState.currentComparison.studio}
+                  onEdit={() => handleEditExample(appState.currentComparison!.worldClass, true)}
                 />
 
                 <ExampleCard
                   example={appState.currentComparison.notApproved}
                   isWorldClass={false}
                   studio={appState.currentComparison.studio}
+                  onEdit={() => handleEditExample(appState.currentComparison!.notApproved, false)}
                 />
               </div>
             </div>
@@ -268,6 +299,16 @@ const Home: React.FC<HomeProps> = ({
           onClose={() => setShowSaveModal(false)}
           onSave={handleSaveConfirm}
           defaultTitle={appState.currentComparison?.title || ''}
+        />
+      )}
+
+      {showEditModal && editingExample && (
+        <EditModal
+          isOpen={showEditModal}
+          onClose={handleCloseEdit}
+          onSave={handleSaveEdit}
+          example={editingExample.example}
+          title={editingExample.isWorldClass ? 'World-Class Example' : 'Not Approved Example'}
         />
       )}
     </div>

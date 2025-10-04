@@ -5,12 +5,14 @@ interface ExampleCardProps {
   example: Example;
   isWorldClass: boolean;
   studio: Studio;
+  onEdit?: () => void;
 }
 
 const ExampleCard: React.FC<ExampleCardProps> = ({
   example,
   isWorldClass,
-  studio
+  studio,
+  onEdit
 }) => {
   const title = isWorldClass ? 'World-Class Example' : 'Not Approved Example';
   const bgColor = isWorldClass ? 'bg-success-50 border-success-200' : 'bg-error-50 border-error-200';
@@ -35,6 +37,17 @@ const ExampleCard: React.FC<ExampleCardProps> = ({
           </div>
         </div>
         
+        {onEdit && (
+          <button
+            onClick={onEdit}
+            className="p-2 text-gray-500 hover:text-gray-700 hover:bg-gray-100 rounded-md transition-colors"
+            title="Edit example"
+          >
+            <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M11 5H6a2 2 0 00-2 2v11a2 2 0 002 2h11a2 2 0 002-2v-5m-1.414-9.414a2 2 0 112.828 2.828L11.828 15H9v-2.828l8.586-8.586z" />
+            </svg>
+          </button>
+        )}
       </div>
 
       <div className="mb-3">

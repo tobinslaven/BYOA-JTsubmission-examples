@@ -130,6 +130,13 @@ function App() {
     }));
   };
 
+  const handleUpdateComparison = (updatedComparison: Comparison) => {
+    setAppState(prev => ({ 
+      ...prev, 
+      currentComparison: updatedComparison
+    }));
+  };
+
   return (
     <div className="min-h-screen bg-gray-50">
       <Navigation activeTab={activeTab} onTabChange={setActiveTab} />
@@ -158,6 +165,7 @@ function App() {
             onStudioChange={handleStudioChange}
             onClearResults={handleClearResults}
             onShowToast={(message, type) => setToast({ message, type })}
+            onUpdateComparison={handleUpdateComparison}
           />
         )}
 
