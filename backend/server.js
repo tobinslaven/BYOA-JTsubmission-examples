@@ -111,17 +111,17 @@ Goal: • Process: • Evidence: • Reflection: • Peer Feedback: • Next Ste
 REQUIREMENTS:
 - WORLD-CLASS example meets ALL criteria above
 - NOT APPROVED example misses several key criteria (no evidence, vague goal, etc.)
-- Use \\n for line breaks in text
+- Use \n for line breaks in text
 - Return ONLY valid JSON (no markdown, no extra text)
 
 JSON FORMAT:
 {
   "worldClass": {
-    "text": "Goal:\\nMy goal is...\\n\\nProcess:\\nI...\\n\\nEvidence:\\n[Photo: my work]\\n\\nReflection:\\nI learned...\\n\\nPeer Feedback:\\nA studio mate...\\n\\nNext Step:\\nI will...",
+    "text": "Goal:\nMy goal is...\n\nProcess:\nI...\n\nEvidence:\n[Photo: my work]\n\nReflection:\nI learned...\n\nPeer Feedback:\nA studio mate...\n\nNext Step:\nI will...",
     "criteriaCovered": ["criteria1", "criteria2", "criteria3"]
   },
   "notApproved": {
-    "text": "Goal:\\nI did...\\n\\nProcess:\\nI worked...\\n\\nEvidence:\\n(Nothing attached)\\n\\nReflection:\\nIt was good.",
+    "text": "Goal:\nI did...\n\nProcess:\nI worked...\n\nEvidence:\n(Nothing attached)\n\nReflection:\nIt was good.",
     "criteriaMissing": ["criteria4", "criteria5"]
   }
 }` :
@@ -202,7 +202,7 @@ Create TWO JourneyTracker submissions about these directions for the specified s
 
 FORMATTING
 - Write like real learner work with natural paragraph breaks and headings.
-- Use \\n for line breaks. Keep readability aligned to the studio.
+- Use \n for line breaks. Keep readability aligned to the studio.
 - IMPORTANT: Use colons after section headers (Goal:, Process:, Evidence:, Reflection:, Peer Feedback:, Next Step:)
 
 CRITICAL: Return ONLY valid JSON. No markdown, no code blocks, no extra text.

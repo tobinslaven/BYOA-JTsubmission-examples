@@ -40,7 +40,7 @@ const ExampleCard: React.FC<ExampleCardProps> = ({
       <div className="mb-3">
         <div className={`p-3 rounded-md bg-white border ${textColor.includes('success') ? 'border-success-200' : 'border-error-200'}`}>
           <p className="text-sm leading-snug whitespace-pre-wrap">
-            {example.text.split('\\n').join('\n')}
+            {example.text.replace(/\\n/g, '\n')}
           </p>
         </div>
       </div>
