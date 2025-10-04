@@ -8,7 +8,7 @@ import {
 } from '../types';
 
 // Backend API configuration
-const BACKEND_URL = process.env.REACT_APP_BACKEND_URL || 'https://byoa-jtsubmission-examples-production.up.railway.app';
+const BACKEND_URL = 'https://byoa-jtsubmission-examples-production.up.railway.app';
 
 // Studio-specific criteria (Acton-aligned)
 const studioCriteria: Record<Studio, string[]> = {
@@ -355,4 +355,12 @@ export const getComparison = async (id: string): Promise<Comparison> => {
   };
 
   return mockComparison;
+};
+
+export const deleteComparison = async (id: string): Promise<void> => {
+  // Simulate API delay
+  await new Promise(resolve => setTimeout(resolve, 300));
+
+  // In a real implementation, this would delete from a database
+  console.log(`Deleting comparison with id: ${id}`);
 };

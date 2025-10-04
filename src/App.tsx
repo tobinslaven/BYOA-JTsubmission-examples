@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { AppState, Studio, Comparison } from './types';
-import { generateExamples, saveComparison, getSavedComparisons } from './services/api';
+import { generateExamples, saveComparison, getSavedComparisons, deleteComparison } from './services/api';
 import Home from './components/Home';
 import SavedResults from './components/SavedResults';
 import About from './components/About';
@@ -137,6 +137,19 @@ function App() {
     }));
   };
 
+  const handleDeleteComparison = async (id: string) => {
+    try {
+      await deleteComparison(id);
+      setAppState(prev => ({
+        ...prev,
+        savedComparisons: prev.savedComparisons.filter(comp => comp.id !== id)
+      }));
+      setToast({ message: 'Comparison deleted successfully!', type: 'success' });
+    } catch (error) {
+      setToast({ message: 'Failed to delete comparison. Please try again.', type: 'error' });
+    }
+  };
+
   return (
     <div className="min-h-screen bg-gray-50">
       <Navigation activeTab={activeTab} onTabChange={setActiveTab} />
@@ -173,6 +186,7 @@ function App() {
           <SavedResults
             savedComparisons={appState.savedComparisons}
             onLoadComparison={handleLoadComparison}
+            onDeleteComparison={handleDeleteComparison}
           />
         )}
 
