@@ -240,17 +240,111 @@ Rules:
 // Mock data generators as fallback
 function generateMockWorldClass(studio: Studio, promptText: string): string {
   const t = promptText.length > 80 ? promptText.slice(0,80)+'...' : promptText;
-  const ES = `Goal\\nMy goal is to show I understand ${t}.\\n\\nProcess\\nI planned, tried, and fixed mistakes. I wrote notes each day.\\n\\nEvidence\\n[Photo: my labeled work]\\n[Link: simple resource I used]\\n\\nReflection\\nI learned one clear idea and why it matters.\\nNext I will improve one part tomorrow.\\n\\nPeer Feedback\\nA studio mate reviewed it. I changed two parts.\\n\\nNext Step\\nI will add one more example and a clearer label.`;
-  const MS = `Goal\\nComplete a clear deliverable on ${t} by Friday.\\n\\nProcess\\nPlanned tasks, researched, built artifact, revised once after feedback.\\n\\nEvidence\\n[Artifact link]\\n[Photo with caption]\\n[Data table]\\n\\nSources\\nTitle, Author (link); Article (link).\\n\\nReflection\\nWhat changed in my thinking and why.\\n\\nPeer Feedback\\n${'Reviewer: studio mate; Changes: clarified method and added caption.'}\\n\\nNext Step\\nSpecific improvement and due date; how this is better than last time.`;
-  const LP = `Goal\\nDeliver a professional analysis of ${t} with defined success metrics.\\n\\nMethod\\nBrief method; constraints; risks.\\n\\nFindings\\nClaims backed by evidence and concise interpretation.\\n\\nCitations\\n3+ credible sources with in-line references.\\n\\nWorld-Class Comparison\\nGap vs. exemplar and plan to close it.\\n\\nStakeholder/Exhibition\\nWho saw it and what changed.\\n\\nReflection & Next Iteration\\nWhat improved vs last iteration; date for next test.`;
+  const ES = `Goal
+My goal is to show I understand ${t}.
+
+Process
+I planned, tried, and fixed mistakes. I wrote notes each day.
+
+Evidence
+[Photo: my labeled work]
+[Link: simple resource I used]
+
+Reflection
+I learned one clear idea and why it matters.
+Next I will improve one part tomorrow.
+
+Peer Feedback
+A studio mate reviewed it. I changed two parts.
+
+Next Step
+I will add one more example and a clearer label.`;
+  const MS = `Goal
+Complete a clear deliverable on ${t} by Friday.
+
+Process
+Planned tasks, researched, built artifact, revised once after feedback.
+
+Evidence
+[Artifact link]
+[Photo with caption]
+[Data table]
+
+Sources
+Title, Author (link); Article (link).
+
+Reflection
+What changed in my thinking and why.
+
+Peer Feedback
+Reviewer: studio mate; Changes: clarified method and added caption.
+
+Next Step
+Specific improvement and due date; how this is better than last time.`;
+  const LP = `Goal
+Deliver a professional analysis of ${t} with defined success metrics.
+
+Method
+Brief method; constraints; risks.
+
+Findings
+Claims backed by evidence and concise interpretation.
+
+Citations
+3+ credible sources with in-line references.
+
+World-Class Comparison
+Gap vs. exemplar and plan to close it.
+
+Stakeholder/Exhibition
+Who saw it and what changed.
+
+Reflection & Next Iteration
+What improved vs last iteration; date for next test.`;
   return studio === 'ES' ? ES : studio === 'MS' ? MS : LP;
 }
 
 function generateMockNotApproved(studio: Studio, promptText: string): string {
   const t = promptText.length > 80 ? promptText.slice(0,80)+'...' : promptText;
-  const ES = `Goal\\nI did a project about ${t}.\\n\\nProcess\\nI worked on it.\\n\\nEvidence\\n(Nothing attached)\\n\\nReflection\\nI think it is good.`;
-  const MS = `Goal\\nResearch ${t}.\\n\\nProcess\\nLooked things up.\\n\\nEvidence\\nLinks not added; no captions.\\n\\nSources\\nNot listed.\\n\\nReflection\\nI learned a lot.`;
-  const LP = `Overview\\nProject about ${t}.\\n\\nMethod\\nGeneral search; not documented.\\n\\nFindings\\nSummary without data.\\n\\nCitations\\nMissing.\\n\\nReflection\\nSeems fine.`;
+  const ES = `Goal
+I did a project about ${t}.
+
+Process
+I worked on it.
+
+Evidence
+(Nothing attached)
+
+Reflection
+I think it is good.`;
+  const MS = `Goal
+Research ${t}.
+
+Process
+Looked things up.
+
+Evidence
+Links not added; no captions.
+
+Sources
+Not listed.
+
+Reflection
+I learned a lot.`;
+  const LP = `Overview
+Project about ${t}.
+
+Method
+General search; not documented.
+
+Findings
+Summary without data.
+
+Citations
+Missing.
+
+Reflection
+Seems fine.`;
   return studio === 'ES' ? ES : studio === 'MS' ? MS : LP;
 }
 
