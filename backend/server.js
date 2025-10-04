@@ -105,8 +105,8 @@ ELEMENTARY STUDIO REQUIREMENTS (ES - ages 7-11)
 CRITERIA FOR ES:
 ${criteria.map((c,i)=>`${i+1}. ${c}`).join('\n')}
 
-STRUCTURE (use these section labels):
-Goal • Process • Evidence • Reflection • Peer Feedback • Next Step
+STRUCTURE (use these section labels with colons):
+Goal: • Process: • Evidence: • Reflection: • Peer Feedback: • Next Step:
 
 REQUIREMENTS:
 - WORLD-CLASS example meets ALL criteria above
@@ -117,11 +117,11 @@ REQUIREMENTS:
 JSON FORMAT:
 {
   "worldClass": {
-    "text": "Goal\\nMy goal is...\\n\\nProcess\\nI...\\n\\nEvidence\\n[Photo: my work]\\n\\nReflection\\nI learned...\\n\\nPeer Feedback\\nA studio mate...\\n\\nNext Step\\nI will...",
+    "text": "Goal:\\nMy goal is...\\n\\nProcess:\\nI...\\n\\nEvidence:\\n[Photo: my work]\\n\\nReflection:\\nI learned...\\n\\nPeer Feedback:\\nA studio mate...\\n\\nNext Step:\\nI will...",
     "criteriaCovered": ["criteria1", "criteria2", "criteria3"]
   },
   "notApproved": {
-    "text": "Goal\\nI did...\\n\\nProcess\\nI worked...\\n\\nEvidence\\n(Nothing attached)\\n\\nReflection\\nIt was good.",
+    "text": "Goal:\\nI did...\\n\\nProcess:\\nI worked...\\n\\nEvidence:\\n(Nothing attached)\\n\\nReflection:\\nIt was good.",
     "criteriaMissing": ["criteria4", "criteria5"]
   }
 }` :
@@ -142,8 +142,8 @@ VOICE & READABILITY BY STUDIO
 - MS (12–15): Grade 6–8 readability; short headings and bullets allowed; concrete evidence and simple citations.
 - LP (16–18): Professional, concise, plain English; clear claims → evidence → citation; analytical tone.
 
-STRUCTURE (use section labels in the text)
-Goal • Process • Evidence • Reflection • Peer Feedback • Next Step
+STRUCTURE (use section labels with colons in the text)
+Goal: • Process: • Evidence: • Reflection: • Peer Feedback: • Next Step:
 
 CRITERIA TO TARGET FOR ${studio}
 ${criteria.map((c,i)=>`${i+1}. ${c}`).join('\n')}
@@ -163,7 +163,7 @@ Criteria: ${JSON.stringify(criteria)}
 
 Create TWO JourneyTracker submissions about these directions for Elementary Studio:
 
-1) WORLD-CLASS EXAMPLE: Meets ALL criteria. Clear sections: Goal, Process, Evidence, Reflection, Peer Feedback, Next Step.
+1) WORLD-CLASS EXAMPLE: Meets ALL criteria. Clear sections: Goal:, Process:, Evidence:, Reflection:, Peer Feedback:, Next Step:.
 2) NOT APPROVED EXAMPLE: Misses SEVERAL key criteria (e.g., no evidence, vague goal, no sources). Keep tone respectful and realistic.
 
 FORMATTING FOR ES:
@@ -196,7 +196,7 @@ Criteria: ${JSON.stringify(criteria)}
 
 Create TWO JourneyTracker submissions about these directions for the specified studio:
 
-1) WORLD-CLASS EXAMPLE: Meets ALL criteria. Clear sections: Goal, Process, Evidence, Reflection, Peer Feedback, Next Step.
+1) WORLD-CLASS EXAMPLE: Meets ALL criteria. Clear sections: Goal:, Process:, Evidence:, Reflection:, Peer Feedback:, Next Step:.
 2) NOT APPROVED EXAMPLE: Misses SEVERAL key criteria (e.g., no evidence, vague goal, no sources, no revision). Keep tone respectful and realistic.
 
 FORMATTING
