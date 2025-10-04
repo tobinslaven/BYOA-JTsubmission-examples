@@ -50,7 +50,7 @@ export interface AppState {
   savedComparisons: Comparison[];
   isLoading: boolean;
   error: string | null;
-  activeStudio: Studio;
+  activeStudio: Studio | null;
   currentPrompt: string;
 }
 

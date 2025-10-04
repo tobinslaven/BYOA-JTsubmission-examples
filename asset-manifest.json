@@ -1,15 +1,15 @@
 {
   "files": {
-    "main.css": "/BYOA-JTsubmission-examples/static/css/main.08f39d2e.css",
-    "main.js": "/BYOA-JTsubmission-examples/static/js/main.0e9b3537.js",
+    "main.css": "/BYOA-JTsubmission-examples/static/css/main.152d5408.css",
+    "main.js": "/BYOA-JTsubmission-examples/static/js/main.9a2f3264.js",
     "static/js/453.6d0fef29.chunk.js": "/BYOA-JTsubmission-examples/static/js/453.6d0fef29.chunk.js",
     "index.html": "/BYOA-JTsubmission-examples/index.html",
-    "main.08f39d2e.css.map": "/BYOA-JTsubmission-examples/static/css/main.08f39d2e.css.map",
-    "main.0e9b3537.js.map": "/BYOA-JTsubmission-examples/static/js/main.0e9b3537.js.map",
+    "main.152d5408.css.map": "/BYOA-JTsubmission-examples/static/css/main.152d5408.css.map",
+    "main.9a2f3264.js.map": "/BYOA-JTsubmission-examples/static/js/main.9a2f3264.js.map",
     "453.6d0fef29.chunk.js.map": "/BYOA-JTsubmission-examples/static/js/453.6d0fef29.chunk.js.map"
   },
   "entrypoints": [
-    "static/css/main.08f39d2e.css",
-    "static/js/main.0e9b3537.js"
+    "static/css/main.152d5408.css",
+    "static/js/main.9a2f3264.js"
   ]
 }

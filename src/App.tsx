@@ -13,7 +13,7 @@ function App() {
     savedComparisons: [],
     isLoading: false,
     error: null,
-    activeStudio: 'MS',
+    activeStudio: null,
     currentPrompt: ''
   });
 

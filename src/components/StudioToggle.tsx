@@ -2,24 +2,35 @@ import React from 'react';
 import { Studio } from '../types';
 
 interface StudioToggleProps {
-  activeStudio: Studio;
+  activeStudio: Studio | null;
   onStudioChange: (studio: Studio) => void;
+  onStudioSubmit: (studio: Studio) => void;
   disabled?: boolean;
+  hasPrompt?: boolean;
 }
 
 const StudioToggle: React.FC<StudioToggleProps> = ({ 
   activeStudio, 
   onStudioChange, 
-  disabled = false 
+  onStudioSubmit,
+  disabled = false,
+  hasPrompt = false
 }) => {
   const studios: Studio[] = ['ES', 'MS', 'LP'];
+
+  const handleStudioClick = (studio: Studio) => {
+    onStudioChange(studio);
+    if (hasPrompt) {
+      onStudioSubmit(studio);
+    }
+  };
 
   return (
     <div className="flex rounded-lg border border-gray-300 overflow-hidden">
       {studios.map((studio) => (
         <button
           key={studio}
-          onClick={() => onStudioChange(studio)}
+          onClick={() => handleStudioClick(studio)}
           disabled={disabled}
           className={`flex-1 px-4 py-2 text-sm font-medium transition-colors ${
             activeStudio === studio
