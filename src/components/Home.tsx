@@ -14,16 +14,36 @@ const AILoadingStage: React.FC = () => {
     "Channeling Acton Academy wisdom...",
     "Crafting world-class example...",
     "Creating not-approved version...",
-    "Adding just the right amount of Acton flair..."
+    "Adding just the right amount of Acton flair...",
+    "Consulting with peer reviewers...",
+    "Fine-tuning the details...",
+    "Double-checking criteria coverage...",
+    "Adding that special Acton touch..."
   ];
 
   useEffect(() => {
-    const interval = setInterval(() => {
-      setCurrentStage(prev => (prev + 1) % stages.length);
-    }, 2000); // Change every 2 seconds
+    let timeoutId: NodeJS.Timeout;
+    
+    const scheduleNextStage = () => {
+      // Random time between 2-3 seconds (2000-3000ms)
+      const randomTime = Math.random() * 1000 + 2000;
+      
+      timeoutId = setTimeout(() => {
+        // Randomly select next stage (avoiding immediate repeat)
+        let nextStage;
+        do {
+          nextStage = Math.floor(Math.random() * stages.length);
+        } while (nextStage === currentStage && stages.length > 1);
+        
+        setCurrentStage(nextStage);
+        scheduleNextStage(); // Schedule the next one
+      }, randomTime);
+    };
 
-    return () => clearInterval(interval);
-  }, [stages.length]);
+    scheduleNextStage();
+
+    return () => clearTimeout(timeoutId);
+  }, [currentStage, stages.length]);
 
   return <span>{stages[currentStage]}</span>;
 };
