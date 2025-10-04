@@ -18,31 +18,35 @@ if (process.env.REACT_APP_OPENAI_API_KEY) {
   });
 }
 
-// Studio-specific criteria
-const studioCriteria = {
+// Studio-specific criteria (Acton-aligned)
+const studioCriteria: Record<Studio, string[]> = {
   ES: [
-    'Complete sentences with proper grammar',
-    'Clear goal or objective stated',
-    'Evidence attached (photos, documents, links)',
-    'At least 2 sources cited with specific details'
+    'Complete sentences with correct capitalization and punctuation',
+    'Simple goal in my own words (starts with "My goal is…")',
+    '3–5 step process written as "I…" statements',
+    'At least one labeled piece of evidence attached [photo/scan/link]',
+    'Name one source OR observation (book title, website, expert, or field note)',
+    'Reflection includes one thing learned and one next step',
+    'Kind, specific peer feedback mentioned (who and what changed)'
   ],
   MS: [
-    'Complete sentences with proper grammar',
-    'Clear goal or objective stated',
-    'Evidence attached (photos, documents, links)',
-    'At least 2 sources cited with specific details',
-    'Personal reflection on learning included',
-    'Demonstrates quality work and effort'
+    'Clear goal + deliverable + due date stated up front',
+    'Evidence attached with captions (artifact, data table, photos, links)',
+    'At least two credible sources cited (title/author/link)',
+    'Personal reflection explains how thinking changed',
+    'Revision noted (how this is better than last time)',
+    'Peer feedback loop documented (who reviewed, what changed)',
+    'All listed criteria addressed (no missing sections)'
   ],
   LP: [
-    'Complete sentences with proper grammar',
-    'Clear goal or objective stated',
-    'Evidence attached (photos, documents, links)',
-    'At least 2 sources cited with specific details',
-    'Personal reflection on learning included',
-    'Demonstrates quality work and effort',
-    'Professional tone and presentation',
-    'Detailed analysis and critical thinking'
+    'Professional tone and structure with clear headings',
+    'Clear deliverable, constraints, and success metrics',
+    'Three or more credible sources with in-line citations',
+    'Original analysis supported by data/evidence (not summary)',
+    'Comparison to a world-class example and gap analysis',
+    'Real-world stakes shown (exhibition, contest, user test, stakeholder)',
+    'Reflection on improvement vs. last iteration with next-step plan and date',
+    'Attachments are well-formatted; all links verified'
   ]
 };
 
@@ -78,55 +82,87 @@ export const generateExamples = async (request: GenerateExamplesRequest): Promis
   try {
     const criteria = studioCriteria[studio];
     
-    // Create a comprehensive prompt for GPT-4
-    const systemPrompt = `You are an expert educator helping students understand what makes a high-quality project submission. You will analyze project directions and create two contrasting examples: one that meets all criteria (world-class) and one that falls short (not approved).
+    // Create comprehensive prompts for GPT-4
+    const systemPrompt = (studio: Studio, criteria: string[]) => `
+You are a Guide at Acton Academy. Your job is to produce two contrasting JourneyTracker (JT) submissions from project directions: a WORLD-CLASS example and a NOT APPROVED example.
 
-For ${studio} level students, focus on these specific criteria:
-${criteria.map((criterion, index) => `${index + 1}. ${criterion}`).join('\n')}
+ACTON ETHOS & TERMS (MUST FOLLOW)
+- Use: learners, guides, studio, badge, session, exhibition, tribe, audit committee, world-class, JourneyTracker (JT).
+- Avoid: students, teacher(s), classroom, assignment(s), grade(s)/report card(s), homework. Use these only if quoted from the prompt.
+- Guides never judge quality or approve badges; peers do. Encourage peer review, not guide approval.
 
-Create realistic, educational examples that clearly demonstrate the difference between meeting and missing these criteria. 
+EXCELLENCE ORIENTATION
+- Standards focus on doing hard things with freedom and responsibility.
+- For repeated attempts: flag improvement ("better than last time").
+- In upper studios, note world-class comparison and public exhibition/contest when appropriate.
 
-FORMATTING REQUIREMENTS:
-- Write submissions as if they were actual student work with natural paragraph breaks
-- Use proper line breaks and spacing to make text readable
-- Structure submissions with clear sections (goal, process, evidence, reflection, etc.)
-- Avoid walls of text - break content into digestible paragraphs`;
+VOICE & READABILITY BY STUDIO
+- ES (7–11): Grade 2–4 readability; short sentences (≤12 words); 2–4 sentence paragraphs; first-person "I… because… I noticed… Next I will…".
+- MS (12–15): Grade 6–8 readability; short headings and bullets allowed; concrete evidence and simple citations.
+- LP (16–18): Professional, concise, plain English; clear claims → evidence → citation; analytical tone.
 
-    const userPrompt = `Project Directions: "${promptText}"
+STRUCTURE (use section labels in the text)
+Goal • Process • Evidence • Reflection • Peer Feedback • Next Step
 
-Please create two examples for ${studio} level:
+CRITERIA TO TARGET FOR ${studio}
+${criteria.map((c,i)=>`${i+1}. ${c}`).join('\n')}
 
-1. WORLD-CLASS EXAMPLE: A submission that meets ALL criteria and demonstrates excellence
-2. NOT APPROVED EXAMPLE: A submission that misses several key criteria
+OUTPUT CONTRACT
+- Return STRICT JSON only (no prose, no markdown, no code fences).
+- Use natural paragraphing and \\n line breaks inside the JSON strings.
+- WORLD-CLASS must explicitly satisfy the listed criteria for ${studio}.
+- NOT APPROVED must clearly miss several key criteria in a realistic way (respectful tone, no sarcasm).
+- Use Acton terminology and studio context throughout.
+`;
 
-IMPORTANT FORMATTING INSTRUCTIONS:
-- Format the text like a real student submission with proper paragraph breaks
-- Use line breaks (\\n) to separate different sections and ideas
-- Make it look natural and readable, not like a wall of text
-- Include proper spacing between different parts of the submission
+    const userPrompt = (studio: Studio, promptText: string, criteria: string[]) => `
+Project Directions: "${promptText}"
 
-For each example, also identify which specific criteria are met or missing.
+Studio: ${studio}
+Criteria: ${JSON.stringify(criteria)}
 
-Respond in this exact JSON format:
+Create TWO JourneyTracker submissions about these directions for the specified studio:
+
+1) WORLD-CLASS EXAMPLE: Meets ALL criteria. Clear sections: Goal, Process, Evidence, Reflection, Peer Feedback, Next Step.
+2) NOT APPROVED EXAMPLE: Misses SEVERAL key criteria (e.g., no evidence, vague goal, no sources, no revision). Keep tone respectful and realistic.
+
+FORMATTING
+- Write like real learner work with natural paragraph breaks and headings.
+- Use \\n for line breaks. Keep readability aligned to the studio.
+
+RETURN EXACT JSON (no extra text):
 {
   "worldClass": {
-    "text": "The complete world-class submission text here with proper line breaks and formatting...",
-    "criteriaCovered": ["criterion 1", "criterion 2", "etc..."]
+    "text": "full JT text with line breaks",
+    "criteriaCovered": ["...only from Criteria list..."]
   },
   "notApproved": {
-    "text": "The complete not-approved submission text here with proper line breaks and formatting...",
-    "criteriaMissing": ["criterion 1", "criterion 2", "etc..."]
+    "text": "full JT text with line breaks",
+    "criteriaMissing": ["...only from Criteria list..."]
   }
-}`;
+}
+
+Rules:
+- "criteriaCovered" and "criteriaMissing" must be subsets of the provided Criteria array for ${studio}.
+- Use Acton terms (learners, guides, studio, badge, session, exhibition, tribe, audit committee, world-class, JT).
+- Do not ask a guide to approve a badge; suggest peer feedback or audit processes if relevant.
+`;
+
+    // Calculate max tokens based on studio level
+    const maxTokensByStudio = {
+      ES: 450,
+      MS: 900, 
+      LP: 1400
+    };
 
     const completion = await openai.chat.completions.create({
       model: "gpt-4",
       messages: [
-        { role: "system", content: systemPrompt },
-        { role: "user", content: userPrompt }
+        { role: "system", content: systemPrompt(studio, criteria) },
+        { role: "user", content: userPrompt(studio, promptText, criteria) }
       ],
-      temperature: 0.7,
-      max_tokens: 2000
+      temperature: 0.4,
+      max_tokens: maxTokensByStudio[studio]
     });
 
     const responseText = completion.choices[0]?.message?.content;
@@ -148,6 +184,18 @@ Respond in this exact JSON format:
     if (!parsedResponse.worldClass || !parsedResponse.notApproved) {
       throw new Error('Invalid response structure from AI');
     }
+
+    // Lightweight terminology cleanup
+    const cleanupTerminology = (text: string) => {
+      return text
+        .replace(/\bstudent(s)?\b/gi, 'learner$1')
+        .replace(/\bteacher(s)?\b/gi, 'guide$1')
+        .replace(/\bclassroom(s)?\b/gi, 'studio$1');
+    };
+
+    // Apply terminology cleanup to both examples
+    parsedResponse.worldClass.text = cleanupTerminology(parsedResponse.worldClass.text);
+    parsedResponse.notApproved.text = cleanupTerminology(parsedResponse.notApproved.text);
 
     return {
       worldClass: {
@@ -191,68 +239,85 @@ Respond in this exact JSON format:
 
 // Mock data generators as fallback
 function generateMockWorldClass(studio: Studio, promptText: string): string {
-  const baseResponses = {
-    ES: `I successfully completed my project about ${promptText.length > 80 ? promptText.substring(0, 80) + '...' : promptText}
-
-My goal was to understand the main concepts and demonstrate my learning clearly. I achieved this by following a structured approach and documenting my process.
-
-I used two reliable sources: my textbook chapter on this topic and an educational website recommended by my teacher. These sources provided detailed information that helped me understand the material better.
-
-I have attached photos of my work showing my step-by-step process, including my notes, sketches, and final project. I also included a summary document explaining what I learned.`,
-    
-    MS: `This project focused on ${promptText.length > 80 ? promptText.substring(0, 80) + '...' : promptText} and required comprehensive research and analysis.
-
-My objective was to investigate the topic thoroughly and present my findings in a clear, organized manner. Through this project, I gained valuable insights into the subject matter.
-
-Research Process:
-I consulted multiple sources including peer-reviewed articles from our school database, interviews with experts in the field, and primary source documents. I took detailed notes and cross-referenced information to ensure accuracy.
-
-Key Findings:
-- [Finding 1 with specific evidence]
-- [Finding 2 with supporting data]
-- [Finding 3 with analysis]
-
-Reflection: This project challenged me to think critically about the topic and develop my research skills. I learned the importance of verifying sources and presenting balanced perspectives.`,
-    
-    LP: `This comprehensive analysis examines ${promptText.length > 80 ? promptText.substring(0, 80) + '...' : promptText} through a rigorous academic approach that demonstrates advanced critical thinking and research methodology.
-
-Research Objective: To conduct an in-depth investigation that contributes meaningful insights to the field of study while demonstrating mastery of advanced research techniques and analytical frameworks.
-
-Methodology: I employed a mixed-methods approach combining quantitative data analysis, qualitative interviews with 8 subject matter experts, and comprehensive literature review of 15+ peer-reviewed sources from academic databases. I also conducted primary research through surveys and case study analysis.
-
-Detailed Analysis: [Comprehensive analysis with specific examples, data points, and critical evaluation]
-
-Professional Presentation: All findings are presented with proper academic formatting, citations, and professional language appropriate for advanced academic work.
-
-Critical Reflection: This research project has significantly advanced my understanding of [topic] and has prepared me for advanced academic and professional work in this field.`
-  };
-  
-  return baseResponses[studio];
+  const t = promptText.length > 80 ? promptText.slice(0,80)+'...' : promptText;
+  const ES = `Goal\\nMy goal is to show I understand ${t}.\\n\\nProcess\\nI planned, tried, and fixed mistakes. I wrote notes each day.\\n\\nEvidence\\n[Photo: my labeled work]\\n[Link: simple resource I used]\\n\\nReflection\\nI learned one clear idea and why it matters.\\nNext I will improve one part tomorrow.\\n\\nPeer Feedback\\nA studio mate reviewed it. I changed two parts.\\n\\nNext Step\\nI will add one more example and a clearer label.`;
+  const MS = `Goal\\nComplete a clear deliverable on ${t} by Friday.\\n\\nProcess\\nPlanned tasks, researched, built artifact, revised once after feedback.\\n\\nEvidence\\n[Artifact link]\\n[Photo with caption]\\n[Data table]\\n\\nSources\\nTitle, Author (link); Article (link).\\n\\nReflection\\nWhat changed in my thinking and why.\\n\\nPeer Feedback\\n${'Reviewer: studio mate; Changes: clarified method and added caption.'}\\n\\nNext Step\\nSpecific improvement and due date; how this is better than last time.`;
+  const LP = `Goal\\nDeliver a professional analysis of ${t} with defined success metrics.\\n\\nMethod\\nBrief method; constraints; risks.\\n\\nFindings\\nClaims backed by evidence and concise interpretation.\\n\\nCitations\\n3+ credible sources with in-line references.\\n\\nWorld-Class Comparison\\nGap vs. exemplar and plan to close it.\\n\\nStakeholder/Exhibition\\nWho saw it and what changed.\\n\\nReflection & Next Iteration\\nWhat improved vs last iteration; date for next test.`;
+  return studio === 'ES' ? ES : studio === 'MS' ? MS : LP;
 }
 
 function generateMockNotApproved(studio: Studio, promptText: string): string {
-  const baseResponses = {
-    ES: `I did my project about ${promptText.length > 80 ? promptText.substring(0, 80) + '...' : promptText}
-
-It was okay. I learned some stuff. My teacher helped me understand it better. I found some information online and in my book.
-
-I think I did good work on this project.`,
-    
-    MS: `For this project I researched ${promptText.length > 80 ? promptText.substring(0, 80) + '...' : promptText}
-
-It was an interesting topic. I found some information about it and learned new things. I think the project went well overall.
-
-I learned a lot from doing this research.`,
-    
-    LP: `This project was about ${promptText.length > 80 ? promptText.substring(0, 80) + '...' : promptText}
-
-I researched the topic and found some relevant information. The project helped me learn more about the subject matter.
-
-I think my analysis was pretty good.`
-  };
-  
-  return baseResponses[studio];
+  const t = promptText.length > 80 ? promptText.slice(0,80)+'...' : promptText;
+  const ES = `Goal\\nI did a project about ${t}.\\n\\nProcess\\nI worked on it.\\n\\nEvidence\\n(Nothing attached)\\n\\nReflection\\nI think it is good.`;
+  const MS = `Goal\\nResearch ${t}.\\n\\nProcess\\nLooked things up.\\n\\nEvidence\\nLinks not added; no captions.\\n\\nSources\\nNot listed.\\n\\nReflection\\nI learned a lot.`;
+  const LP = `Overview\\nProject about ${t}.\\n\\nMethod\\nGeneral search; not documented.\\n\\nFindings\\nSummary without data.\\n\\nCitations\\nMissing.\\n\\nReflection\\nSeems fine.`;
+  return studio === 'ES' ? ES : studio === 'MS' ? MS : LP;
 }
+
+// Built-in guardrails for UI validation
+export const validateResponse = (response: GenerateExamplesResponse, studio: Studio, criteriaAll: string[]) => {
+  const warnings: string[] = [];
+  
+  // Ensure criteriaCovered ⊆ criteriaAll and criteriaMissing ⊆ criteriaAll
+  const worldClassCriteria = response.worldClass.criteriaCovered || [];
+  const notApprovedCriteria = response.notApproved.criteriaMissing || [];
+  
+  const invalidWorldClass = worldClassCriteria.filter(c => !criteriaAll.includes(c));
+  const invalidNotApproved = notApprovedCriteria.filter(c => !criteriaAll.includes(c));
+  
+  if (invalidWorldClass.length > 0) {
+    warnings.push(`World-Class example contains invalid criteria: ${invalidWorldClass.join(', ')}`);
+  }
+  
+  if (invalidNotApproved.length > 0) {
+    warnings.push(`Not Approved example contains invalid criteria: ${invalidNotApproved.join(', ')}`);
+  }
+  
+  // Flag if ES length > ~200 words or LP < ~350 words
+  const wordCount = (text: string) => text.split(/\s+/).length;
+  const worldClassWords = wordCount(response.worldClass.text);
+  const notApprovedWords = wordCount(response.notApproved.text);
+  
+  if (studio === 'ES' && (worldClassWords > 200 || notApprovedWords > 200)) {
+    warnings.push(`ES examples may be too long (${worldClassWords}/${notApprovedWords} words)`);
+  }
+  
+  if (studio === 'LP' && (worldClassWords < 350 || notApprovedWords < 350)) {
+    warnings.push(`LP examples may be too short (${worldClassWords}/${notApprovedWords} words)`);
+  }
+  
+  // Flag if evidence or sources appear in ❌ text when those are listed as missing
+  const hasEvidence = (text: string) => /\[.*\]|link|photo|evidence|attachment/i.test(text);
+  const hasSources = (text: string) => /source|citation|reference|author|title/i.test(text);
+  
+  if (response.notApproved.criteriaMissing?.some(c => c.toLowerCase().includes('evidence')) && 
+      hasEvidence(response.notApproved.text)) {
+    warnings.push('Not Approved example mentions evidence but lists evidence as missing');
+  }
+  
+  if (response.notApproved.criteriaMissing?.some(c => c.toLowerCase().includes('source')) && 
+      hasSources(response.notApproved.text)) {
+    warnings.push('Not Approved example mentions sources but lists sources as missing');
+  }
+  
+  // Soft-warn if banned terms slip through
+  const bannedTerms = /\b(student|teacher|classroom|grade|homework)s?\b/gi;
+  const worldClassBanned = response.worldClass.text.match(bannedTerms);
+  const notApprovedBanned = response.notApproved.text.match(bannedTerms);
+  
+  if (worldClassBanned) {
+    warnings.push(`World-Class example contains banned terms: ${worldClassBanned.join(', ')}`);
+  }
+  
+  if (notApprovedBanned) {
+    warnings.push(`Not Approved example contains banned terms: ${notApprovedBanned.join(', ')}`);
+  }
+  
+  return {
+    isValid: warnings.length === 0,
+    warnings
+  };
+};
 
 export const saveComparison = async (request: SaveComparisonRequest): Promise<SaveComparisonResponse> => {
   // Simulate API delay
