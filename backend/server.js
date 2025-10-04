@@ -94,19 +94,35 @@ app.post('/api/generate-examples', async (req, res) => {
 
     // Create comprehensive prompts for GPT-4
     const systemPrompt = studio === 'ES' ? 
-      `Create two examples for Elementary Studio.
+      `You are a Guide at Acton Academy. Create two JourneyTracker submissions for Elementary Studio (ES): a WORLD-CLASS example and a NOT APPROVED example.
 
-Project: ${promptText}
+ELEMENTARY STUDIO REQUIREMENTS (ES - ages 7-11)
+- Use simple words and short sentences (2-4 words max per sentence)
+- Write like a young learner would write
+- Use first-person "I..." statements
+- Keep it simple and clear
 
-Return this exact JSON format only:
+CRITERIA FOR ES:
+${criteria.map((c,i)=>`${i+1}. ${c}`).join('\n')}
+
+STRUCTURE (use these section labels):
+Goal • Process • Evidence • Reflection • Peer Feedback • Next Step
+
+REQUIREMENTS:
+- WORLD-CLASS example meets ALL criteria above
+- NOT APPROVED example misses several key criteria (no evidence, vague goal, etc.)
+- Use \\n for line breaks in text
+- Return ONLY valid JSON (no markdown, no extra text)
+
+JSON FORMAT:
 {
   "worldClass": {
-    "text": "Goal\\nMy goal is to learn about the project.\\n\\nProcess\\nI planned what to do.\\nI tried different ways.\\nI wrote notes each day.\\n\\nEvidence\\n[Photo: my labeled work]\\n\\nReflection\\nI learned something new.\\nNext I will try harder.\\n\\nPeer Feedback\\nA studio mate helped me.\\n\\nNext Step\\nI will add more details.",
-    "criteriaCovered": ["Complete sentences with correct capitalization and punctuation", "Simple goal in my own words", "3–5 step process written as statements"]
+    "text": "Goal\\nMy goal is...\\n\\nProcess\\nI...\\n\\nEvidence\\n[Photo: my work]\\n\\nReflection\\nI learned...\\n\\nPeer Feedback\\nA studio mate...\\n\\nNext Step\\nI will...",
+    "criteriaCovered": ["criteria1", "criteria2", "criteria3"]
   },
   "notApproved": {
-    "text": "Goal\\nI did a project.\\n\\nProcess\\nI worked on it.\\n\\nEvidence\\n(Nothing attached)\\n\\nReflection\\nIt was good.",
-    "criteriaMissing": ["At least one labeled piece of evidence attached", "Name one source OR observation"]
+    "text": "Goal\\nI did...\\n\\nProcess\\nI worked...\\n\\nEvidence\\n(Nothing attached)\\n\\nReflection\\nIt was good.",
+    "criteriaMissing": ["criteria4", "criteria5"]
   }
 }` :
       `You are a Guide at Acton Academy. Your job is to produce two contrasting JourneyTracker (JT) submissions from project directions: a WORLD-CLASS example and a NOT APPROVED example.
@@ -140,7 +156,39 @@ OUTPUT CONTRACT
 - Use Acton terminology and studio context throughout.`;
 
     const userPrompt = studio === 'ES' ? 
-      `Create examples for: ${promptText}` :
+      `Project Directions: "${promptText}"
+
+Studio: ES (Elementary Studio)
+Criteria: ${JSON.stringify(criteria)}
+
+Create TWO JourneyTracker submissions about these directions for Elementary Studio:
+
+1) WORLD-CLASS EXAMPLE: Meets ALL criteria. Clear sections: Goal, Process, Evidence, Reflection, Peer Feedback, Next Step.
+2) NOT APPROVED EXAMPLE: Misses SEVERAL key criteria (e.g., no evidence, vague goal, no sources). Keep tone respectful and realistic.
+
+FORMATTING FOR ES:
+- Write like a young learner would write
+- Use simple words and short sentences
+- Use first-person "I..." statements
+- Keep it simple and clear
+
+CRITICAL: Return ONLY valid JSON. No markdown, no code blocks, no extra text.
+
+{
+  "worldClass": {
+    "text": "full JT text with line breaks",
+    "criteriaCovered": ["criteria1", "criteria2", "criteria3"]
+  },
+  "notApproved": {
+    "text": "full JT text with line breaks",
+    "criteriaMissing": ["criteria4", "criteria5"]
+  }
+}
+
+Rules:
+- "criteriaCovered" and "criteriaMissing" must be subsets of the provided Criteria array for ES.
+- Use simple, age-appropriate language for elementary students.
+- Make sure examples are realistic for 7-11 year olds.` :
       `Project Directions: "${promptText}"
 
 Studio: ${studio}
