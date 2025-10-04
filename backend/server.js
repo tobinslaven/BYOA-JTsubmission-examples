@@ -171,10 +171,14 @@ Rules:
 
     // Calculate max tokens based on studio level
     const maxTokensByStudio = {
-      ES: 450,
-      MS: 900, 
+      ES: 800,  // Increased from 450
+      MS: 900,
       LP: 1400
     };
+
+    console.log('Calling OpenAI API for', studio, 'with', maxTokensByStudio[studio], 'max tokens');
+    console.log('System prompt length:', systemPrompt.length);
+    console.log('User prompt length:', userPrompt.length);
 
     const completion = await openai.chat.completions.create({
       model: "gpt-4",
@@ -182,7 +186,7 @@ Rules:
         { role: "system", content: systemPrompt },
         { role: "user", content: userPrompt }
       ],
-      temperature: 0.4,
+      temperature: 0.3,  // Reduced from 0.4 for more consistent output
       max_tokens: maxTokensByStudio[studio]
     });
 
