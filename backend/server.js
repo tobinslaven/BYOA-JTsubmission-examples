@@ -177,19 +177,41 @@ Rules:
     let parsedResponse;
     try {
       // Clean up the response text - sometimes OpenAI includes extra text
-      const cleanResponse = responseText.trim();
-      console.log('Raw OpenAI response for', studio, ':', cleanResponse.substring(0, 200) + '...');
+      let cleanResponse = responseText.trim();
       
+      // Remove any markdown code blocks if present
+      cleanResponse = cleanResponse.replace(/```json\s*|\s*```/g, '');
+      
+      // Try to find JSON object
       const jsonMatch = cleanResponse.match(/\{[\s\S]*\}/);
       const jsonString = jsonMatch ? jsonMatch[0] : cleanResponse;
       
-      console.log('Extracted JSON for', studio, ':', jsonString.substring(0, 100) + '...');
+      console.log('Raw response length for', studio, ':', responseText.length);
+      console.log('JSON string length for', studio, ':', jsonString.length);
       
       parsedResponse = JSON.parse(jsonString);
+      
+      console.log('Successfully parsed JSON for', studio);
+      
     } catch (parseError) {
-      console.error('Failed to parse OpenAI response for', studio, ':', responseText);
+      console.error('Failed to parse OpenAI response for', studio);
+      console.error('Response text:', responseText);
       console.error('Parse error:', parseError.message);
-      throw new Error('Invalid response format from AI');
+      
+      // Try alternative parsing approaches
+      try {
+        // Maybe it's wrapped in backticks or has extra text
+        const altMatch = responseText.match(/```(?:json)?\s*(\{[\s\S]*?\})\s*```/);
+        if (altMatch) {
+          console.log('Trying alternative parsing with backticks...');
+          parsedResponse = JSON.parse(altMatch[1]);
+          console.log('Alternative parsing successful for', studio);
+        } else {
+          throw new Error('No valid JSON found');
+        }
+      } catch (altError) {
+        throw new Error('Invalid response format from AI');
+      }
     }
 
     // Validate the response structure
